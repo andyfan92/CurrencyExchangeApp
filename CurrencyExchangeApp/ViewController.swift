@@ -75,7 +75,7 @@ class ViewController: UIViewController {
             let fromValue = rates?[from]?.floatValue
             let toValue = rates?[to]?.floatValue
             let result = Float(toValue!) / Float(fromValue!)
-            self.lblText.text = "1\(from) = \(result)\(to)"
+            self.lblText.text = "1 \(from) = \(result) \(to)"
         }
         
     }
