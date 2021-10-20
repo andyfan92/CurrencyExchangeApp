@@ -49,7 +49,7 @@ class ViewController: UIViewController {
                 return name1.localizedStandardCompare(name2) == ComparisonResult.orderedAscending
             })
             
-            self.fromDelegate.fromData = ["EUR"]
+            self.fromDelegate.fromData = self.currency
             self.toDelegate.toData = self.currency
             
             self.pickFrom.dataSource = self.fromDelegate
@@ -63,17 +63,19 @@ class ViewController: UIViewController {
     
 
     @IBAction func btnSubmit(_ sender: Any) {
-        var from = "EUR"
-        var to = self.currency[pickTo.selectedRow(inComponent: 0)]
+        let from = self.currency[pickFrom.selectedRow(inComponent: 0)]
+        let to = self.currency[pickTo.selectedRow(inComponent: 0)]
         print ("from \(from) to \(to)")
         
-        var url = transURL + from + "&symbols=" + to
+        let url = transURL + "EUR" + "&symbols=" + from + "," + to
         print(url)
         AF.request(url).responseJSON{ [self] response in
             let res = JSON(response.data).dictionary
             let rates = res?["rates"]?.dictionary
-            var value = rates?[to]?.stringValue
-            self.lblText.text = "1\(from) = \(value!)\(to)"
+            let fromValue = rates?[from]?.floatValue
+            let toValue = rates?[to]?.floatValue
+            let result = Float(toValue!) / Float(fromValue!)
+            self.lblText.text = "1\(from) = \(result)\(to)"
         }
         
     }
